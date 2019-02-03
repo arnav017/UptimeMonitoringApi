@@ -1,5 +1,8 @@
+//dependencies
 let http = require('http');
 let url = require('url');
+let StringDecoder = require('string_decoder').StringDecoder;
+
 
 let server = http.createServer(function(req,res){
 
@@ -17,10 +20,22 @@ let server = http.createServer(function(req,res){
 
   let method = req.method.toLowerCase();
   let headers = req.headers;
-  console.log(trimmedPath);
-  //console.log(headers);
+  let payload = req.payload;
 
-  res.end("request ended");
+  //payload comes to the server as a stream
+  //this happens on the event 'data'
+
+  let stringDecoder = new StringDecoder('utf-8');
+  let buffer=''
+
+  req.on('data',function(recievedData){
+    buffer += stringDecoder.write(recievedData);
+  });
+  req.on('end',function(recievedData){
+    buffer += stringDecoder.end();
+    console.log("djfaslhsf",buffer);
+    res.end("request ended");
+  });
 
 });
 server.listen(3000,function(){
