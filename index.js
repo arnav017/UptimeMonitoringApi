@@ -32,8 +32,10 @@ let server = http.createServer(function(req,res){
     buffer += stringDecoder.write(recievedData);
   });
   req.on('end',function(recievedData){
-    buffer += stringDecoder.end();
-    console.log("djfaslhsf",buffer);
+
+    //i am not really sure what this does so commenting it for now
+    //buffer += stringDecoder.end();
+    console.log(buffer);
     res.end("request ended");
   });
 
