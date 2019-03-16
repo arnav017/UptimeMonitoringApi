@@ -3,12 +3,13 @@ let http = require('http');
 let url = require('url');
 let StringDecoder = require('string_decoder').StringDecoder;
 
-////my-file-dependencies
+//my-file-dependencies
 let handlers = require('./handlers');
+let env = require('./config');
 
 let routers = {
-  normal:handlers.normal,
-  avocado:handlers.avocado
+  normal: handlers.normal,
+  avocado: handlers.avocado
 };
 
 
@@ -41,16 +42,15 @@ let server = http.createServer(function(req, res) {
 
   if (typeof(routers[trimmedPath]) != 'undefined') {
     selectedHandler = routers[trimmedPath];
-  }
-  else{
+  } else {
     selectedHandler = handlers.notFound;
   }
 
-  selectedHandler(payload,function(statusCode,recievedData){
-    console.log("definig callback");
-        res.writeHead(statusCode);
-        res.end(JSON.stringify(recievedData));
-      });
+  selectedHandler(payload, function(statusCode, recievedData) {
+    res.setHeader('content-type', 'json')
+    res.writeHead(statusCode);
+    res.end(JSON.stringify(recievedData));
+  });
 
   req.on('data', function(recievedData) {
     buffer += stringDecoder.write(recievedData);
@@ -61,18 +61,19 @@ let server = http.createServer(function(req, res) {
   //this is how we collect strings which come in forms of streams
   req.on('end', function(recievedData) {
     //i am not really sure what this does so commenting it for now
-  //  buffer += stringDecoder.end();
+    //  buffer += stringDecoder.end();
 
-  //  console.log("payload is :-\n"+buffer);
+    //  console.log("payload is :-\n"+buffer);
 
     //remove this writeHead when i start sending callbacks
-  //  res.writeHead(777);
+    //  res.writeHead(777);
     //res.end("request ended");
 
   });
 });
 
-server.listen(3000, function() {
-  console.log("listening on 3000");
+var listeningPort = env.port;
+server.listen(env.port, function() {
+  console.log("listening on"+ env.name);
 });
-console.log("Hello world");
+console.log("Hello Wrold");
