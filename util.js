@@ -1,8 +1,8 @@
 var util = {};
 
-util.assignIfNotEmpty = function(data, dataType, defaultValue){
-  if(typeof(data)==dataType && data!= null)
-  return data;
+util.assignIfNotEmpty = function(data, dataType, defaultValue,converToLowerCase){
+  if((data)==dataType && data!= null)
+  return converToLowerCase ? data.toLowerCase() : data;
   else
   return defaultValue
 }
